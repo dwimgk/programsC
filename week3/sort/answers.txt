@@ -1,0 +1,19 @@
+sort1 uses: Bubble sort
+
+How do you know?: Fast when comparing smaller data sets, but is the slowest when having to work with the bigger sets.
+
+sort2 uses: Merge Sort
+
+How do you know?: Consistently lowest system runtime, due to the efficiency of merge sorting.
+
+sort3 uses: Selection Sort
+
+How do you know?: Is the most efficient and fast when sorting smaller data sets.
+
+system run times      s1          s2          s3
+random5000          0.011       0.011       0.008
+random10000         0.018       0.022       0.029
+ramdom50000         0.135       0.118       0.119
+reversed5000        0.020       0.013       0.016
+reversed10000       0.027       0.024       0.034
+reversed50000       0.147       0.118       0.139
