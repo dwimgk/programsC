@@ -1,0 +1,7 @@
+{
+    "C_Cpp.default.compilerPath": "f:\\GitHubRepositories\\mingw64_devkit\\bin\\gcc.exe",
+    "files.associations": {
+        "time.h": "c",
+        "stdio.h": "c"
+    }
+}
