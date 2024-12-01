@@ -45,6 +45,7 @@ typedef struct
     int shape[TETROMINO_ROWS][TETROMINO_COLS];
     int y_row;
     int x_col;
+    const char *color;
     bool placed;
 } Tetromino;
 
@@ -53,9 +54,9 @@ Tetromino tetrominos[MAX_TETROMINOS];
 int current_tetromino = 0;
 bool key_pressed = false;
 
-void print_grid();
+void print_grid(int grid[GRID_ROWS][GRID_COLS], const char *color);
 void shape_generator();
-void print_shape();
+void print_shape(int shape[TETROMINO_ROWS][TETROMINO_COLS], const char *color, int row, int col);
 void clear_input();
 void proccess_input();
 
@@ -115,14 +116,14 @@ int main()
 
     // seeding with time(null) so that every random num will be different each iteration of the code
     srand(time(NULL));
-    //terminal top left corner is (1,1)
-    int start_pos_row = 5;
-    int start_pos_col = 10;
+    int start_pos_row = 0;
+    int start_pos_col = 1;
 
     tetrominos[current_tetromino];
     memcpy(tetrominos[current_tetromino].shape, shape_O, sizeof(tetrominos[current_tetromino].shape));
     tetrominos[current_tetromino].y_row = start_pos_row;
     tetrominos[current_tetromino].x_col = start_pos_col;
+    tetrominos[current_tetromino].color = color_green;
     tetrominos[current_tetromino].placed = false;
 
     while (game_running)
@@ -133,14 +134,14 @@ int main()
         }
 
         print_grid(playfield, color_white);
-        print_shape();
+        print_shape(tetrominos[current_tetromino].shape, tetrominos[current_tetromino].color, tetrominos[current_tetromino].y_row, tetrominos[current_tetromino].x_col);
 
         long sleep_time = 500000;
         usleep(sleep_time);
         // 50 000 microseconds = 0.5s
         proccess_input();
 
-        //tetrominos[current_tetromino].y_row++;
+        tetrominos[current_tetromino].y_row++;
         if (tetrominos[current_tetromino].y_row + 3 == 24)
         {
             tetrominos[current_tetromino].placed = true;
@@ -189,7 +190,7 @@ void proccess_input()
     };
 }
 
-void print_grid()
+void print_grid(int grid[GRID_ROWS][GRID_COLS], const char *color)
 {
     printf("\n");
     printf("\n");
@@ -199,15 +200,15 @@ void print_grid()
     {
         for (int j = 0; j < GRID_COLS; j++)
         {
-            if (playfield[i][j] == 1) // print your grid
+            if (grid[i][j] == 1) // print your grid
             {
                 if (i == GRID_ROWS - 1)
                 {
-                    printf("%s▀%s", color_white, color_off);
+                    printf("%s▀%s", color, color_off);
                 }
                 else
                 {
-                    printf("%s█%s", color_white, color_off);
+                    printf("%s█%s", color, color_off);
                 }
             }
             else
@@ -218,7 +219,7 @@ void print_grid()
         printf("\n");
     }
 }
-void print_shape()
+void print_shape(int shape[TETROMINO_ROWS][TETROMINO_COLS], const char *color, int row, int col)
 {
     // const char *color_off = "\033[0m"; // Reset to default
     // for (int i = 0; i < TETROMINO_ROWS; i++)
@@ -238,21 +239,15 @@ void print_shape()
     //     printf("\n");
     //     row++;
     // }
-
-    int playfield_x_col=tetrominos[current_tetromino].x_col;
-    int playfield_y_row=tetrominos[current_tetromino].y_row;
     for (int i = 0; i < TETROMINO_ROWS; i++)
     {
-        printf("\033[%i;%iH", tetrominos[current_tetromino].y_row, tetrominos[current_tetromino].x_col);
         for (int j = 0; j < TETROMINO_COLS; j++)
         {
-            if (tetrominos[current_tetromino].shape[i][j] == 1) // print your square
+            if (shape[i][j] == 1) // print your square
             {
-                playfield[playfield_y_row][playfield_x_col] = 1;
+                playfield[i][j] =1;
             }
-            playfield_x_col++;
         }
-        playfield_y_row++;
     }
 }
 
