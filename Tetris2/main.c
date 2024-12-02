@@ -226,7 +226,7 @@ void proccess_input()
             }
             if (cannot_move_to_right && is_I)
             {
-                pos_col -= 4;
+                pos_col -= 5;
             }
             if (cannot_move_to_left && cannot_move_to_right)
             {
