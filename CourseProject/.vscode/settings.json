@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "functions.h": "c",
+        "globals.h": "c",
+        "tetramino.h": "c"
+    }
+}
