@@ -22,13 +22,11 @@ int main()
     {
         int input;
         system("cls");
-        printf("████████  ██████ ████████   ██████    ██████  ███████\n");
-        printf("   ██     ██        ██      ██   ██     ██    ██ \n");
-        printf("   ██     ██████    ██      ██████      ██    ███████\n");
-        printf("   ██     ██        ██      ██   ██     ██         ██   \n");
-        printf("   ██     ██████    ██      ██    ██  ██████  ███████\n");
-        printf("\n");
-        printf("\n");
+        printf("%s████████%s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s████████ %s", color_red, color_off);printf("%s ██████   %s", color_purple, color_off);printf("%s ██████ %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
+        printf("%s   ██   %s", color_green, color_off);printf("%s  ██     %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██   ██  %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s ██ %s\n", color_cyan, color_off);
+        printf("%s   ██   %s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██████   %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
+        printf("%s   ██   %s", color_green, color_off);printf("%s  ██     %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██   ██  %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s      ██ %s  \n", color_cyan, color_off);
+        printf("%s   ██   %s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██    ██ %s", color_purple, color_off);printf("%s ██████ %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
         printf("\n");
         printf("\n");
         printf("\n");
