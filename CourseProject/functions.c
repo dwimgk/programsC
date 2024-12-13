@@ -6,8 +6,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <conio.h>
+
 #include "globals.h"
-#include "tetramino.h"
 
 void game_over()
 {

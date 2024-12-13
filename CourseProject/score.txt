@@ -1,0 +1,5 @@
+Player: ilko
+Score: 1
+Player: DAMYAN
+Score: 2
+

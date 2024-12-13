@@ -6,83 +6,134 @@
 #include <unistd.h>
 #include <time.h>
 #include <conio.h>
-//#include "tetramino.h"
+
 #include "functions.h"
 #include "globals.h"
 
-// #define GRID_ROWS 21
-// #define GRID_COLS 22
-// #define ALL_ROTATIONS 4
+// gcc -o tetris.exe main.c functions.c globals.c
 
-// terminal top left corner is (1,1)
-int pos_row;
-int pos_col;
-int current_shape[ALL_ROTATIONS][TETROMINO_ROWS][TETROMINO_COLS];
-bool current_shape_isplaced;
-bool key_pressed = false;
-bool cannot_move_to_right;
-bool cannot_move_to_left;
-int rotation = 0;
-// terminal top left corner is (1,1)
-int start_pos_row = 0;
-int start_pos_col = 9;
-bool is_I;
-bool is_O;
-
-int score = 0;
-
-bool game_stop = false;
-
-
-// playfield
-int playfield[GRID_ROWS][GRID_COLS] = {
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 5
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 10
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 15
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 20
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-
-};
-
-int non_dynamic_playfield[GRID_ROWS][GRID_COLS];
+void play();
+void game_init();
+void scoreboard();
 
 int main()
+{
+    while (true)
+    {
+        int input;
+        system("cls");
+        printf("████████  ██████ ████████   ██████    ██████  ███████\n");
+        printf("   ██     ██        ██      ██   ██     ██    ██ \n");
+        printf("   ██     ██████    ██      ██████      ██    ███████\n");
+        printf("   ██     ██        ██      ██   ██     ██         ██   \n");
+        printf("   ██     ██████    ██      ██    ██  ██████  ███████\n");
+        printf("\n");
+        printf("\n");
+        printf("\n");
+        printf("\n");
+        printf("\n");
+        printf("1. PLAY\n");
+        printf("2. Scoreboard\n");
+        printf("3. Exit program\n");
+        printf("What do you wish to do? ");
+        scanf("%d", &input);
+
+        if (input == 1)
+        {
+            play();
+            break;
+        }
+        else if (input == 2)
+        {
+            scoreboard();
+            //scanf("%d", &input);
+        }
+        else if (input == 3)
+        {
+            printf("\nGoodbye :)\n");
+            break;
+        }
+        else
+        {
+            printf("\nInvalid input :(, please follow the guidelines :)\n");
+            //scanf("%d", &input);
+        }
+    }
+
+    // free(player);
+    return 0;
+}
+
+void scoreboard()
+{
+    int return_input;
+    system("cls");
+    FILE *file = fopen("score.txt", "r");
+    if (file == NULL)
+    {
+        perror("error opening file");
+        return;
+    }
+
+    char ch;
+    while ((ch = fgetc(file)) != EOF)
+    {
+        putchar(ch);
+    }
+
+    fclose(file);
+    printf("TO RETURN TO THE MENU PLEASE TYPE 1 --> ");
+    while (true)
+    {
+        scanf("%d", &return_input);
+        if (return_input == 1)
+        {
+            return;
+        }
+        else
+        {
+            printf("\n Cannot return, input is invalid :(\n");
+        }
+    }
+}
+void play()
+{
+    char player[50];
+
+    printf("Enter player name: ");
+    scanf("%49s", player);
+    // if (player == NULL)
+    // {
+    //     printf("could not allocate memory\n");
+    //     return;
+    // }
+
+    // printf("Enter player name: ");
+
+    // fgets(player, 100, stdin);
+    size_t length = strlen(player);
+    if (length > 0 && player[length - 1] == '\n')
+    {
+        player[length - 1] = '\0';
+    }
+
+    game_init();
+
+    FILE *file = fopen("score.txt", "a");
+    if (file == NULL)
+    {
+        perror("failed to open file");
+        return;
+    }
+    fprintf(file, "Player: %s\n", player);
+    fprintf(file, "Score: %d\n\n", score);
+
+    // Close the file
+    fclose(file);
+
+    return;
+}
+void game_init()
 {
     memcpy(non_dynamic_playfield, playfield, sizeof(non_dynamic_playfield));
     // seeding with time(null) so that every random num will be different each iteration of the code
@@ -103,7 +154,7 @@ int main()
         if (game_stop)
         {
             end_screen();
-            return 1;
+            return;
         }
 
         cannot_move_to_left = false;
@@ -136,8 +187,6 @@ int main()
         clear_input();
 
         line_checker();
-
-        //system("cls");
     }
-    return 0;
+    return;
 }
