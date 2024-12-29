@@ -3,6 +3,8 @@
         "functions.h": "c",
         "globals.h": "c",
         "tetramino.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "stdio.h": "c",
+        "conio.h": "c"
     }
 }

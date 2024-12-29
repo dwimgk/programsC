@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <locale.h>
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
 #include <time.h>
 #include <conio.h>
@@ -17,13 +16,14 @@ int main()
 {
     while (true)
     {
-        int input;
+        char input;
         system("cls");
-        printf("%s████████%s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s████████ %s", color_red, color_off);printf("%s ██████   %s", color_purple, color_off);printf("%s ██████ %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
-        printf("%s   ██   %s", color_green, color_off);printf("%s  ██     %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██   ██  %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s ██ %s\n", color_cyan, color_off);
-        printf("%s   ██   %s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██████   %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
-        printf("%s   ██   %s", color_green, color_off);printf("%s  ██     %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██   ██  %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s      ██ %s  \n", color_cyan, color_off);
-        printf("%s   ██   %s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██    ██ %s", color_purple, color_off);printf("%s ██████ %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
+        printf("\n");
+        printf("%s    ████████%s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s████████ %s", color_red, color_off);printf("%s ██████   %s", color_purple, color_off);printf("%s ██████ %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
+        printf("%s       ██   %s", color_green, color_off);printf("%s  ██     %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██   ██  %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s ██ %s\n", color_cyan, color_off);
+        printf("%s       ██   %s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██████   %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
+        printf("%s       ██   %s", color_green, color_off);printf("%s  ██     %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██   ██  %s", color_purple, color_off);printf("%s   ██   %s", color_pink, color_off);printf("%s      ██ %s  \n", color_cyan, color_off);
+        printf("%s       ██   %s", color_green, color_off);printf("%s  ██████ %s", color_yellow, color_off);printf("%s   ██    %s", color_red, color_off);printf("%s ██    ██ %s", color_purple, color_off);printf("%s ██████ %s", color_pink, color_off);printf("%s ███████%s\n", color_cyan, color_off);
         printf("\n");
         printf("\n");
         printf("\n");
@@ -31,19 +31,16 @@ int main()
         printf("2. Scoreboard\n");
         printf("3. Exit program\n");
         printf("What do you wish to do? ");
-        scanf("%d", &input);
-
-        if (input == 1)
+        scanf(" %c", &input);
+        if (input == '1')
         {
             play();
-            //break;
         }
-        else if (input == 2)
+        else if (input == '2')
         {
             scoreboard();
-            //scanf("%d", &input);
         }
-        else if (input == 3)
+        else if (input == '3')
         {
             printf("\nGoodbye :)\n");
             break;
@@ -51,11 +48,9 @@ int main()
         else
         {
             printf("\nInvalid input :(, please follow the guidelines :)\n");
-            //scanf("%d", &input);
+            sleep(2);
         }
     }
-
-    // free(player);
     return 0;
 }
 

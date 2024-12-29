@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <locale.h>
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
 #include <time.h>
 #include <conio.h>
@@ -32,10 +31,6 @@ void clear_input()
         while (kbhit())
         {
             getch();
-            // if (kbhit() == 0)
-            // {
-            //     break;
-            // }
         }
         key_pressed = false;
     }
@@ -115,10 +110,6 @@ void proccess_input()
 void shape_initialiser()
 {
     game_over();
-    // if(game_stop)
-    // {
-    //     return;
-    // }
 
     is_I = false;
     is_O = false;
@@ -288,31 +279,31 @@ void print_playfield()
                     printf("%s█%s", color_white, color_off);
                 }
             }
-            else if (playfield[i][j] == 4) // print your grid
+            else if (playfield[i][j] == 4) // print the squares
             {
                 printf("%s█%s", color_yellow, color_off);
             }
-            else if (playfield[i][j] == 3) // print your grid
+            else if (playfield[i][j] == 3) // print the Z
             {
                 printf("%s█%s", color_green, color_off);
             }
-            else if (playfield[i][j] == 2) // print your grid
+            else if (playfield[i][j] == 2) // print S
             {
                 printf("%s█%s", color_red, color_off);
             }
-            else if (playfield[i][j] == 5) // print your grid
+            else if (playfield[i][j] == 5) // print T
             {
                 printf("%s█%s", color_purple, color_off);
             }
-            else if (playfield[i][j] == 6) // print your grid
+            else if (playfield[i][j] == 6) // print I
             {
                 printf("%s█%s", color_cyan, color_off);
             }
-            else if (playfield[i][j] == 7) // print your grid
+            else if (playfield[i][j] == 7) // print L
             {
                 printf("%s█%s", color_orange, color_off);
             }
-            else if (playfield[i][j] == 8) // print your grid
+            else if (playfield[i][j] == 8) // print J
             {
                 printf("%s█%s", color_pink, color_off);
             }
@@ -360,7 +351,6 @@ void line_checker()
         {
             row_to_clear = row_counter;
             rearranger(row_to_clear);
-            // line_checker();
         }
     }
 }
@@ -466,7 +456,7 @@ void game_init()
 }
 void scoreboard()
 {
-    int return_input;
+    char return_input;
     system("cls");
     FILE *file = fopen("score.txt", "r");
     if (file == NULL)
@@ -485,8 +475,8 @@ void scoreboard()
     printf("TO RETURN TO THE MENU PLEASE TYPE 1 --> ");
     while (true)
     {
-        scanf("%d", &return_input);
-        if (return_input == 1)
+        scanf(" %c", &return_input);
+        if (return_input == '1')
         {
             return;
         }
@@ -502,15 +492,6 @@ void play()
 
     printf("Enter player name: ");
     scanf("%49s", player);
-    // if (player == NULL)
-    // {
-    //     printf("could not allocate memory\n");
-    //     return;
-    // }
-
-    // printf("Enter player name: ");
-
-    // fgets(player, 100, stdin);
     size_t length = strlen(player);
     if (length > 0 && player[length - 1] == '\n')
     {
@@ -528,7 +509,6 @@ void play()
     fprintf(file, "Player: %s\n", player);
     fprintf(file, "Score: %d\n\n", score);
 
-    // Close the file
     fclose(file);
 
     return;
