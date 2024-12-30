@@ -1,157 +1,27 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <locale.h>
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
 #include <time.h>
 #include <conio.h>
-#include "tetramino.h"
 
-#define GRID_ROWS 21
-#define GRID_COLS 22
-#define ALL_ROTATIONS 4
+#include "globals.h"
 
-// terminal top left corner is (1,1)
-int pos_row;
-int pos_col;
-int current_shape[ALL_ROTATIONS][TETROMINO_ROWS][TETROMINO_COLS];
-bool current_shape_isplaced;
-bool key_pressed = false;
-bool cannot_move_to_right;
-bool cannot_move_to_left;
-int rotation = 0;
-// terminal top left corner is (1,1)
-int start_pos_row = 0;
-int start_pos_col = 9;
-bool is_I;
-bool is_O;
 
-int score = 0;
 
-bool game_stop = false;
-
-void print_playfield();
-void shape_initialiser();
-void position_shapes();
-void clear_input();
-void proccess_input();
-void bottom_collision(int shape_row, int shape_col);
-void left_collision(int shape_row, int shape_col);
-void right_collision(int shape_row, int shape_col);
-
-void line_checker();
-void rearranger(int row_to_clear);
-
-void game_over();
-void end_screen();
-
-// playfield
-int playfield[GRID_ROWS][GRID_COLS] = {
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 5
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 10
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 15
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    // 20
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-
-};
-
-int non_dynamic_playfield[GRID_ROWS][GRID_COLS];
-
-int main()
+void game_over()
 {
-    memcpy(non_dynamic_playfield, playfield, sizeof(non_dynamic_playfield));
-    // seeding with time(null) so that every random num will be different each iteration of the code
-    srand(time(NULL));
-
-    system("cls");
-
-    bool game_running = true;
-    current_shape_isplaced = false;
-
-    pos_row = start_pos_row;
-    pos_col = start_pos_col;
-
-    shape_initialiser();
-
-    while (game_running)
+    for (int shape_row = 0; shape_row < TETROMINO_ROWS; shape_row++)
     {
-        if (game_stop)
+        for (int shape_col = 0; shape_col < TETROMINO_COLS; shape_col++)
         {
-            end_screen();
-            return 1;
+            if (non_dynamic_playfield[shape_row + start_pos_row][shape_col + start_pos_col] != 0)
+            {
+                game_stop = true;
+            }
         }
-
-        cannot_move_to_left = false;
-        cannot_move_to_right = false;
-
-        position_shapes();
-        print_playfield();
-        if (current_shape_isplaced)
-        {
-            memcpy(non_dynamic_playfield, playfield, sizeof(non_dynamic_playfield));
-            shape_initialiser();
-            pos_row = start_pos_row;
-            pos_col = start_pos_col;
-            current_shape_isplaced = false;
-        }
-        else if (!current_shape_isplaced)
-        {
-            memcpy(playfield, non_dynamic_playfield, sizeof(playfield));
-            pos_row++;
-        }
-        long sleep_time = 150000 - score * 20000;
-        if (sleep_time < 0)
-        {
-            sleep_time = 0;
-        }
-        usleep(sleep_time);
-        // 50 000 microseconds = 0.5s
-
-        proccess_input();
-        clear_input();
-
-        line_checker();
-
-        //system("cls");
     }
-    return 0;
 }
 
 void clear_input()
@@ -161,10 +31,6 @@ void clear_input()
         while (kbhit())
         {
             getch();
-            // if (kbhit() == 0)
-            // {
-            //     break;
-            // }
         }
         key_pressed = false;
     }
@@ -244,10 +110,6 @@ void proccess_input()
 void shape_initialiser()
 {
     game_over();
-    // if(game_stop)
-    // {
-    //     return;
-    // }
 
     is_I = false;
     is_O = false;
@@ -288,26 +150,6 @@ void shape_initialiser()
     }
 }
 
-void position_shapes()
-{
-    for (int shape_row = 0; shape_row <= TETROMINO_ROWS; shape_row++)
-    {
-        for (int shape_col = 0; shape_col <= TETROMINO_COLS; shape_col++)
-        {
-            if (current_shape[rotation][shape_row][shape_col] != 0 && shape_row < TETROMINO_ROWS && shape_col < TETROMINO_COLS)
-            {
-                // if(playfield[shape_row + pos_row+1][shape_col + pos_col]){}
-                playfield[shape_row + pos_row][shape_col + pos_col] = current_shape[rotation][shape_row][shape_col];
-            }
-            if (shape_row == TETROMINO_ROWS && shape_col < TETROMINO_COLS)
-            {
-                bottom_collision(shape_row, shape_col);
-            }
-            left_collision(shape_row, shape_col);
-            right_collision(shape_row, shape_col);
-        }
-    }
-}
 void bottom_collision(int shape_row, int shape_col)
 {
     if (current_shape[rotation][shape_row - 1][shape_col] != 0)
@@ -393,6 +235,25 @@ void right_collision(int shape_row, int shape_col)
         }
     }
 }
+void position_shapes()
+{
+    for (int shape_row = 0; shape_row <= TETROMINO_ROWS; shape_row++)
+    {
+        for (int shape_col = 0; shape_col <= TETROMINO_COLS; shape_col++)
+        {
+            if (current_shape[rotation][shape_row][shape_col] != 0 && shape_row < TETROMINO_ROWS && shape_col < TETROMINO_COLS)
+            {
+                playfield[shape_row + pos_row][shape_col + pos_col] = current_shape[rotation][shape_row][shape_col];
+            }
+            if (shape_row == TETROMINO_ROWS && shape_col < TETROMINO_COLS)
+            {
+                bottom_collision(shape_row, shape_col);
+            }
+            left_collision(shape_row, shape_col);
+            right_collision(shape_row, shape_col);
+        }
+    }
+}
 
 void print_playfield()
 {
@@ -417,31 +278,31 @@ void print_playfield()
                     printf("%s█%s", color_white, color_off);
                 }
             }
-            else if (playfield[i][j] == 4) // print your grid
+            else if (playfield[i][j] == 4) // print the squares
             {
                 printf("%s█%s", color_yellow, color_off);
             }
-            else if (playfield[i][j] == 3) // print your grid
+            else if (playfield[i][j] == 3) // print the Z
             {
                 printf("%s█%s", color_green, color_off);
             }
-            else if (playfield[i][j] == 2) // print your grid
+            else if (playfield[i][j] == 2) // print S
             {
                 printf("%s█%s", color_red, color_off);
             }
-            else if (playfield[i][j] == 5) // print your grid
+            else if (playfield[i][j] == 5) // print T
             {
                 printf("%s█%s", color_purple, color_off);
             }
-            else if (playfield[i][j] == 6) // print your grid
+            else if (playfield[i][j] == 6) // print I
             {
                 printf("%s█%s", color_cyan, color_off);
             }
-            else if (playfield[i][j] == 7) // print your grid
+            else if (playfield[i][j] == 7) // print L
             {
                 printf("%s█%s", color_orange, color_off);
             }
-            else if (playfield[i][j] == 8) // print your grid
+            else if (playfield[i][j] == 8) // print J
             {
                 printf("%s█%s", color_pink, color_off);
             }
@@ -451,29 +312,6 @@ void print_playfield()
             }
         }
         printf("\n");
-    }
-}
-
-void line_checker()
-{
-    bool row_full = true;
-    int row_to_clear = 0;
-    for (int row_counter = GRID_ROWS - 2; row_counter >= 0; row_counter--)
-    {
-        row_full = true;
-        for (int col_checker = 1; col_checker < GRID_COLS - 1; col_checker++)
-        {
-            if (non_dynamic_playfield[row_counter][col_checker] == 0)
-            {
-                row_full = false;
-            }
-        }
-        if (row_full)
-        {
-            row_to_clear = row_counter;
-            rearranger(row_to_clear);
-            // line_checker();
-        }
     }
 }
 void rearranger(int row_to_clear)
@@ -494,17 +332,24 @@ void rearranger(int row_to_clear)
         }
     }
 }
-
-void game_over()
+void line_checker()
 {
-    for (int shape_row = 0; shape_row < TETROMINO_ROWS; shape_row++)
+    bool row_full = true;
+    int row_to_clear = 0;
+    for (int row_counter = GRID_ROWS - 2; row_counter >= 0; row_counter--)
     {
-        for (int shape_col = 0; shape_col < TETROMINO_COLS; shape_col++)
+        row_full = true;
+        for (int col_checker = 1; col_checker < GRID_COLS - 1; col_checker++)
         {
-            if (non_dynamic_playfield[shape_row + start_pos_row][shape_col + start_pos_col] != 0)
+            if (non_dynamic_playfield[row_counter][col_checker] == 0)
             {
-                game_stop = true;
+                row_full = false;
             }
+        }
+        if (row_full)
+        {
+            row_to_clear = row_counter;
+            rearranger(row_to_clear);
         }
     }
 }
@@ -525,10 +370,145 @@ void end_screen()
     printf("\n");
     printf("                                 Game is over, thank you for playing ! :)");
     printf("\n");
+    printf("                                          current score: %i\n", score);
     printf("\n");
     printf("\n");
     printf("\n");
     printf("\n");
     printf("\n");
     printf("\n");
+    printf("\n");
+    int return_input;
+    printf("TO RETURN TO THE MENU PLEASE TYPE 1 --> ");
+    while (true)
+    {
+        scanf("%d", &return_input);
+        if (return_input == 1)
+        {
+            return;
+        }
+        else
+        {
+            printf("\n Cannot return, input is invalid :(\n");
+        }
+    }
+}
+
+
+// THE GAME LOOP
+void game_init()
+{
+    memcpy(non_dynamic_playfield, playfield, sizeof(non_dynamic_playfield));
+    // seeding with time(null) so that every random num will be different each iteration of the code
+    srand(time(NULL));
+
+    system("cls");
+
+    bool game_running = true;
+    current_shape_isplaced = false;
+
+    pos_row = start_pos_row;
+    pos_col = start_pos_col;
+
+    shape_initialiser();
+
+    while (game_running)
+    {
+        if (game_stop)
+        {
+            end_screen();
+            return;
+        }
+
+        cannot_move_to_left = false;
+        cannot_move_to_right = false;
+
+        position_shapes();
+        print_playfield();
+        if (current_shape_isplaced)
+        {
+            memcpy(non_dynamic_playfield, playfield, sizeof(non_dynamic_playfield));
+            shape_initialiser();
+            pos_row = start_pos_row;
+            pos_col = start_pos_col;
+            current_shape_isplaced = false;
+        }
+        else if (!current_shape_isplaced)
+        {
+            memcpy(playfield, non_dynamic_playfield, sizeof(playfield));
+            pos_row++;
+        }
+        long sleep_time = 150000 - score * 20000;
+        if (sleep_time < 0)
+        {
+            sleep_time = 0;
+        }
+        usleep(sleep_time);
+        // 50 000 microseconds = 0.5s
+
+        proccess_input();
+        clear_input();
+
+        line_checker();
+    }
+    return;
+}
+void scoreboard()
+{
+    char return_input;
+    system("cls");
+    FILE *file = fopen("score.txt", "r");
+    if (file == NULL)
+    {
+        perror("error opening file");
+        return;
+    }
+
+    char ch;
+    while ((ch = fgetc(file)) != EOF)
+    {
+        putchar(ch);
+    }
+
+    fclose(file);
+    printf("TO RETURN TO THE MENU PLEASE TYPE 1 --> ");
+    while (true)
+    {
+        scanf(" %c", &return_input);
+        if (return_input == '1')
+        {
+            return;
+        }
+        else
+        {
+            printf("\n Cannot return, input is invalid :(\n");
+        }
+    }
+}
+void play()
+{
+    char player[50];
+
+    printf("Enter player name: ");
+    scanf("%49s", player);
+    size_t length = strlen(player);
+    if (length > 0 && player[length - 1] == '\n')
+    {
+        player[length - 1] = '\0';
+    }
+
+    game_init();
+
+    FILE *file = fopen("score.txt", "a");
+    if (file == NULL)
+    {
+        perror("failed to open file");
+        return;
+    }
+    fprintf(file, "Player: %s\n", player);
+    fprintf(file, "Score: %d\n\n", score);
+
+    fclose(file);
+
+    return;
 }

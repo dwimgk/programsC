@@ -9,8 +9,6 @@
 #include "functions.h"
 #include "globals.h"
 
-// gcc -o tetris.exe main.c functions.c globals.c
-
 
 int main()
 {
